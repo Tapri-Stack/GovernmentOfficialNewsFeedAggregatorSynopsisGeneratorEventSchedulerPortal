@@ -31,8 +31,16 @@ jobs:
           python main.py
         
       - name: Upload PDF Artifact 
+        id: upload-step
         uses: actions/upload-artifact@v7
         with:
           name: GovernmentOfficialNewsLetter.pdf
           path: ./out/output.pdf
           if-no-files-found: error
+        
+      - name: Publish Event
+        env:
+          GOVERNMENT_OFFICIAL_NEWS_FEED_ARTIFACT_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/${{ steps.upload-step.outputs.artifact-id }}
+          GOVERNMENT_OFFICIAL_NEWS_EVENT_SUBSCRIBER_URL: ${{ secrets.GOVERNMENT_OFFICIAL_NEWS_EVENT_SUBSCRIBER_URL }}
+        run: |
+          python discord/GovernmentOfficialNewsFeedEventPublisher.py
