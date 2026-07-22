@@ -1,3 +1,5 @@
 .direnv
 .envrc
 flake.*
+__pycache__
+assets/
