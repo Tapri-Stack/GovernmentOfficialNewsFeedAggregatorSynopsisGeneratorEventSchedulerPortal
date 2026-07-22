@@ -3,3 +3,4 @@
 flake.*
 __pycache__
 out/
+.env

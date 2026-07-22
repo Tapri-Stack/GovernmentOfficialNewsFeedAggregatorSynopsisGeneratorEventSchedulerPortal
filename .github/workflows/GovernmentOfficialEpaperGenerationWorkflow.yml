@@ -24,6 +24,9 @@ jobs:
           pip install -r requirements.txt
       
       - name: Run Main Script
+        env:
+          GOVERNMENT_OFFICIAL_NEWS_SOURCE_URL: ${{ secrets.GOVERNMENT_OFFICIAL_NEWS_SOURCE_URL }} 
+          GOVERNMENT_OFFICIAL_NEWS_EVENT_SUBSCRIBER_URL: ${{ secrets.GOVERNMENT_OFFICIAL_NEWS_EVENT_SUBSCRIBER_URL }} 
         run: |
           python main.py
         

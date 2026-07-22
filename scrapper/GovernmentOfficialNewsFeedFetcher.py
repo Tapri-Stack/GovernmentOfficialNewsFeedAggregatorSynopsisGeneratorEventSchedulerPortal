@@ -4,15 +4,12 @@ from datetime import date, timedelta
 import requests
 import io
 
-BASE_URL = (
-    "https://asset.harnscloud.com/PublicationData/TOI/cap/",
-    "{yyyy}/{mm}/{dd}/Page/{date}_{page:03d}_cap.jpg"
-)
+PATTERN = "{yyyy}/{mm}/{dd}/Page/{date}_{page:03d}_cap.jpg"
 REFERER = "https://bcclepaper.indiatimes.com/"
 
 class Scrapper:
-    def __init__(self, output_dir="./") -> None:
-        self.output_dir = output_dir
+    def __init__(self, source_url="") -> None:
+        self.source_url = source_url
     
     def _download_page(self, date, page, stop_event):
         if stop_event.is_set():
@@ -20,7 +17,7 @@ class Scrapper:
 
         dd, mm, yyyy = date.split("_")
 
-        today_url = BASE_URL[1].format(
+        today_url = PATTERN.format(
             yyyy=yyyy,
             mm=mm,
             dd=dd,
@@ -33,7 +30,7 @@ class Scrapper:
             "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
         }
 
-        r = requests.get(BASE_URL[0] + today_url, headers=headers)
+        r = requests.get(self.source_url + today_url, headers=headers)
         if not r.content.startswith(b"\xff\xd8"):
             stop_event.set()
             return page, None
@@ -42,6 +39,7 @@ class Scrapper:
 
 
     def fetch(self, delta=0) -> list:
+        print(self.source_url)
         today = (date.today() - timedelta(days=delta)).strftime("%d_%m_%Y")
 
         stop_event = Event() 

@@ -1,10 +1,14 @@
 from scrapper.GovernmentOfficialNewsFeedFetcher import Scrapper
 from scrapper.GovernmentOfficialNewsFeedConsolidator import Consolidator
+import os
+from dotenv import load_dotenv
 
 OUTPUT_DIR = "./out/"
 
 def main():
-    scrapper = Scrapper(OUTPUT_DIR)
+    load_dotenv()
+
+    scrapper = Scrapper(os.environ.get("GOVERNMENT_OFFICIAL_NEWS_SOURCE_URL"))
     images = scrapper.fetch()
 
     if not images:
