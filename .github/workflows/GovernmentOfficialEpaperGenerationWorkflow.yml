@@ -1,0 +1,35 @@
+name: Government Official epaper Generation Workflow
+
+on:
+  schedule:
+   - cron: '30 3 * * *'
+  workflow_dispatch:
+
+jobs:
+  generate-government-official-newsletter:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v7
+      
+      - name: Setup Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.14'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Run Main Script
+        run: |
+          python main.py
+        
+      - name: Upload PDF Artifact 
+        uses: actions/upload-artifact@v7
+        with:
+          name: GovernmentOfficialNewsLetter.pdf
+          path: ./out/output.pdf
+          if-no-files-found: error
