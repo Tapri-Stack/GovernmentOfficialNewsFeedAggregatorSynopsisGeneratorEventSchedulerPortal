@@ -1,7 +1,7 @@
 from scrapper.GovernmentOfficialNewsFeedFetcher import Scrapper
 from scrapper.GovernmentOfficialNewsFeedConsolidator import Consolidator
 
-OUTPUT_DIR = "./assets/temp/"
+OUTPUT_DIR = "./out/"
 
 def main():
     scrapper = Scrapper(OUTPUT_DIR)

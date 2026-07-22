@@ -15,6 +15,9 @@ class Scrapper:
         self.output_dir = output_dir
     
     def _download_page(self, date, page, stop_event):
+        if stop_event.is_set():
+            return page_num, None
+
         dd, mm, yyyy = date.split("_")
 
         today_url = BASE_URL[1].format(
@@ -32,6 +35,7 @@ class Scrapper:
 
         r = requests.get(BASE_URL[0] + today_url, headers=headers)
         if not r.content.startswith(b"\xff\xd8"):
+            stop_event.set()
             return page, None
         
         return page, io.BytesIO(r.content)
