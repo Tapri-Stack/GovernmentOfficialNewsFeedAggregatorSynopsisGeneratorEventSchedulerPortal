@@ -12,6 +12,8 @@ class Consolidator:
         with open(filepath, 'wb') as f:
             f.write(pdf)
 
+        return filepath 
+
 if __name__=='__main__':
     consolidator = Consolidator("./")
     consolidator.consolidate()

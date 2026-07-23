@@ -39,7 +39,6 @@ class Scrapper:
 
 
     def fetch(self, delta=0) -> list:
-        print(self.source_url)
         today = (date.today() - timedelta(days=delta)).strftime("%d_%m_%Y")
 
         stop_event = Event() 
