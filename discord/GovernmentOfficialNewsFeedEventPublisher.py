@@ -3,14 +3,15 @@ import os
 from dotenv import load_dotenv
 
 class EventPublisher:
-    def __init__(self, artifact_url="", webhook_url=""):
+    def __init__(self, artifact_url="", summary="", webhook_url=""):
         self.artifact_url = artifact_url
+        self.summary = summary
         self.webhook_url = webhook_url
 
     def publish(self):
         embed = {
             "title": "Government Official News Feed Notification",
-            "description": "Fetching the latest newsletter from the government official source.",
+            "description": f"{self.summary}",
             "color": 15885602,
             "fields": [
                 {
@@ -38,5 +39,5 @@ class EventPublisher:
 
 if __name__=='__main__':
     load_dotenv()
-    publisher = EventPublisher(os.environ.get("GOVERNMENT_OFFICIAL_NEWS_FEED_ARTIFACT_URL"), os.environ.get("GOVERNMENT_OFFICIAL_NEWS_EVENT_SUBSCRIBER_URL"))
+    publisher = EventPublisher(os.environ.get("GOVERNMENT_OFFICIAL_NEWS_FEED_ARTIFACT_URL"), os.environ.get("GOVERNMENT_OFFICIAL_NEWS_FEED_SUMMARY"), os.environ.get("GOVERNMENT_OFFICIAL_NEWS_EVENT_SUBSCRIBER_URL"))
     publisher.publish()

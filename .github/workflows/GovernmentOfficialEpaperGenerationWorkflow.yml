@@ -44,4 +44,9 @@ jobs:
           GOVERNMENT_OFFICIAL_NEWS_FEED_ARTIFACT_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/${{ steps.upload-step.outputs.artifact-id }}
           GOVERNMENT_OFFICIAL_NEWS_EVENT_SUBSCRIBER_URL: ${{ secrets.GOVERNMENT_OFFICIAL_NEWS_EVENT_SUBSCRIBER_URL }}
         run: |
-          python discord/GovernmentOfficialNewsFeedEventPublisher.py
+          export GOVERNMENT_OFFICIAL_NEWS_FEED_SUMMARY="$(cat ./out/llm_output.md)"
+          python discord/GovernmentOfficialNewsFeedEventPublisher.py 
+
+      - name: Generate Job Summary
+        run: |
+            cat ./out/llm_output.md >> $GITHUB_STEP_SUMMARY
