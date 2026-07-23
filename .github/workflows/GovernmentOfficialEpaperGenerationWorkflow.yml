@@ -41,7 +41,7 @@ jobs:
         
       - name: Publish Event
         env:
-          GOVERNMENT_OFFICIAL_NEWS_FEED_ARTIFACT_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/${{ steps.upload-step.outputs.artifact-id }}
+          GOVERNMENT_OFFICIAL_NEWS_FEED_ARTIFACT_URL: https://release.tapri.dev/?download_url=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/${{ steps.upload-step.outputs.artifact-id }}
           GOVERNMENT_OFFICIAL_NEWS_EVENT_SUBSCRIBER_URL: ${{ secrets.GOVERNMENT_OFFICIAL_NEWS_EVENT_SUBSCRIBER_URL }}
         run: |
           export GOVERNMENT_OFFICIAL_NEWS_FEED_SUMMARY="$(cat ./out/llm_output.md)"
