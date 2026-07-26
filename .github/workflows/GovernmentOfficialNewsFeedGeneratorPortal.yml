@@ -1,0 +1,82 @@
+name: Government Official News Feed Generator Portal Hosting Workflow
+
+on:
+  workflow_dispatch
+
+jobs:
+  serve:
+    runs-on: ubuntu-latest
+
+    timeout-minutes: 350
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v7
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get install -y dirmngr ca-certificates gnupg
+          sudo gpg --homedir /tmp --no-default-keyring --keyring gnupg-ring:/usr/share/keyrings/mono-official-archive-keyring.gpg \
+            --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+          sudo chmod +r /usr/share/keyrings/mono-official-archive-keyring.gpg
+          echo "deb [signed-by=/usr/share/keyrings/mono-official-archive-keyring.gpg] https://download.mono-project.com/repo/ubuntu stable-focal main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
+          sudo apt-get update
+          sudo apt-get install -y mono-complete mono-xsp4
+
+      - name: Build
+        working-directory: web
+        run: |
+          mkdir -p bin
+          mcs \
+            -r:System \
+            -r:System.Web.dll \
+            -r:System.Web.Extensions.dll \
+            -r:System.Web.Services.dll \
+            -r:System.Net.Http.dll \
+            -r:System.Json.dll \
+            -t:library \
+            -out:bin/GovernmentOfficialNewsFeedGeneratorPortal.dll \
+            GovernmentOfficialNewsFeedGeneratorPortal.aspx.cs
+
+      - name: Setup cloudflared
+        uses: AnimMouse/setup-cloudflared@v2
+
+      - name: Run Server
+        working-directory: web
+        env:
+          GOVERNMENT_OFFICIAL_NEWS_FEED_GENERATOR_ACTIVATION_USER_KEY: ${{ secrets.GOVERNMENT_OFFICIAL_NEWS_FEED_GENERATOR_ACTIVATION_USER_KEY }}
+          GOVERNMENT_OFFICIAL_NEWS_FEED_GENERATOR_BOOTH_QUEUE_WAIT_TIME: ${{ secrets.GOVERNMENT_OFFICIAL_NEWS_FEED_GENERATOR_BOOTH_QUEUE_WAIT_TIME }}
+        run: |
+          mkdir -p ~/.cloudflared
+          echo "${{ secrets.GOVERNMENT_OFFICIAL_NEWS_FEED_TUNNEL_ACTIVATION_USER_KEY }}" | base64 -d > ~/.cloudflared/${{ secrets.GOVERNMENT_OFFICIAL_NEWS_FEED_TUNNEL_ID }}.json
+          echo "${{ secrets.GOVERNMENT_OFFICIAL_NEWS_FEED_TUNNEL_CONFIG }}" | base64 -d > ~/.cloudflared/config.yaml
+
+          tail -f /dev/null | nohup xsp4 --applications=/:. --port=5000 --printlog > xsp.log 2>&1 &
+          sleep 10
+          cat xsp.log
+          curl -sv http://localhost:5000 -o /dev/null -w "HTTP status: %{http_code}\n"
+
+          cloudflared tunnel --config ~/.cloudflared/config.yaml run &
+          sleep 5
+
+          wait
+
+      - name: Shutdown cloudflared
+        if: '! cancelled()'
+        uses: AnimMouse/setup-cloudflared/shutdown@v2
+
+  respin:
+    needs: serve
+    if: failure() && needs.primary-job.result == 'failure'
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Respin Self
+        run: |
+          curl -s -X POST \
+            -H "Authorization: Bearer ${{ secrets.GOVERNMENT_OFFICIAL_NEWS_FEED_GENERATOR_ACTIVATION_USER_KEY }}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "User-Agent: GovernmentOfficialNewsFeedGeneratorPortalHostingWorkflow" \
+            https://api.github.com/repos/Tapri-Stack/GovernmentOfficialNewsFeedAggregatorSynopsisGeneratorEventSchedulerPortal/actions/workflows/GovernmentOfficialNewsFeedGeneratorPortal.yml/dispatches \
+            -d '{ "ref": "main", "inputs": {}, "return_run_details": true }'
