@@ -2,6 +2,6 @@
 .envrc
 flake.*
 __pycache__
-out/
+web/bin/
 .env
 .venv
