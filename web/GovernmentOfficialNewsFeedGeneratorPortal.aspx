@@ -11,34 +11,6 @@
         <link rel="stylesheet" href="stylesheets/style.css">
     </head>
     <body>
-        <script>
-            function startElapsedTimer(startedAtIso, threshold) {
-                startedAt = new Date(startedAtIso)
-                lblElapsed = document.getElementById("lblElapsed")
-                btnDownload = document.getElementById("<%= btnDownload.ClientID %>")
-
-                const intervalId = setInterval(() => {
-                    const elapsed = Date.now() - startedAt
-
-                    var totalSeconds = Math.floor((Date.now() - startedAt.getTime()) / 1000);
-                    var minutes = Math.floor(totalSeconds / 60);
-                    var seconds = totalSeconds % 60;
-
-                    const text = String(minutes).padStart(2, "0") + ":" + String(seconds).padStart(2, "0")
-                    lblElapsed.textContent = text
-
-                    if (totalSeconds > threshold) {
-                        btnDownload.style.display = "block"
-                        lblElapsed.style.display = "none"
-
-                        // TODO: Set onClick for btnDownload to open the link
-
-                        clearInterval(intervalId)
-                    }
-                }, 200)
-            }
-        </script>
-
         <header class="header">
             <img src="assets/bescom.png" height="200" />
             <h1>Government Official News Feed Aggregator Synopsis Generator Event Scheduler Portal</h1>
@@ -54,20 +26,38 @@
         </marquee>
         <main>
             <form ID="form" runat="server">
-                <asp:Button ID="btnAction" class="primary" runat="server" Text="Generate Today's Official Government Newsletter" OnClick="btnAction_Click" />
+                <asp:ScriptManager ID="ScriptManager" runat="server" EnablePartialRendering="true" EnableScriptGlobalization="false" EnableScriptLocalization="false" EnablePageMethods="true" />
 
-                <dialog ID="dlgAwaiter" runat="server">
-                    <header>
-                        <h2>Please Wait</h2>
-                        <asp:Button ID="btnClose" class="primary" runat="server" Text="×" OnClick="btnClose_Click" />
-                    </header>
-                    <section>
-                        <p>Your newsletter for <b><asp:Label ID="lblToday" runat="server" Text="{DDDD}, {MMMM} {DD}, {YYYY}" /></b> is being prepared. Kindly wait on this page...</p>
-                        <quote><b>DO NOT</b> press any button</quote>
-                        <code id="lblElapsed" runat="server">--:--</code>
-                        <asp:Button ID="btnDownload" class="primary" runat="server" Text="Download" OnClick="btnDownload_Click" />
-                    </section>
-                </dialog>
+                <asp:UpdatePanel ID="upnlPage" runat="server" UpdateMode="Conditional" ChildrenAsTriggers="false">
+                    <ContentTemplate>
+                        <asp:Button ID="btnAction" class="primary" runat="server" Text="Generate Today's Official Government Newsletter" OnClick="btnAction_Click" />
+
+                        <dialog ID="dlgAwaiter" runat="server">
+                            <header>
+                                <h2>Please Wait</h2>
+                                <asp:Button ID="btnClose" class="primary" runat="server" Text="×" OnClick="btnClose_Click" />
+                            </header>
+                            <section>
+                                <p>Your newsletter for <b><asp:Label ID="lblToday" runat="server" Text="{DDDD}, {MMMM} {DD}, {YYYY}" /></b> is being prepared. Kindly wait on this page...</p>
+                                <quote><b>DO NOT</b> press any button</quote>
+                                <asp:UpdatePanel ID="upnlModal" runat="server" UpdateMode="Conditional" ChildrenAsTriggers="true">
+                                    <ContentTemplate>
+                                        <code id="lblElapsed" runat="server">--:--</code>
+                                        <asp:Button ID="btnDownload" class="primary" runat="server" Text="Download" OnClick="btnDownload_Click" />
+                                        <asp:Timer ID="tmrElapsed" runat="server" Interval="1000" Enabled="False" OnTick="tmrElapsed_Tick" />
+                                    </ContentTemplate>
+                                    <Triggers>
+                                        <asp:PostBackTrigger ControlID="btnDownload" />
+                                    </Triggers>
+                                </asp:UpdatePanel>
+                            </section>
+                        </dialog>
+                    </ContentTemplate>
+                    <Triggers>
+                        <asp:AsyncPostBackTrigger ControlID="btnAction" EventName="Click" />
+                        <asp:AsyncPostBackTrigger ControlID="btnClose" EventName="Click" />
+                    </Triggers>
+                </asp:UpdatePanel>
             </form>
         </main>
     </body>

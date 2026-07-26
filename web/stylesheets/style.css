@@ -134,18 +134,14 @@ dialog > section {
     padding: 1rem 2rem;
 }
 
-dialog > section > #lblElapsed,
-dialog > section > #btnDownload {
-    align-self: center;
-}
-
-dialog > section > #lblElapsed {
+#upnlModal > #lblElapsed {
     margin: 5rem;
     font-size: 8rem;
+    text-align: center;
 }
 
-dialog > section > #btnDownload {
-    margin: 4rem 4rem 1rem;
+#upnlModal > #btnDownload {
+    margin: 4rem auto 1rem;
     padding: 1rem;
     font-size: 1.2rem;
 }
