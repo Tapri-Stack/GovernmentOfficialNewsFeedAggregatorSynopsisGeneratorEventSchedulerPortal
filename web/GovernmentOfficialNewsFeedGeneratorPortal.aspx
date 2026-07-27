@@ -28,6 +28,8 @@
             <form ID="form" runat="server">
                 <asp:ScriptManager ID="ScriptManager" runat="server" EnablePartialRendering="true" EnableScriptGlobalization="false" EnableScriptLocalization="false" EnablePageMethods="true" />
 
+                <asp:Button ID="btnImpulse" runat="server" OnClick="btnImpulse_Click" style="display: none" />
+
                 <asp:UpdatePanel ID="upnlPage" runat="server" UpdateMode="Conditional" ChildrenAsTriggers="false">
                     <ContentTemplate>
                         <asp:Button ID="btnAction" class="primary" runat="server" Text="Generate Today's Official Government Newsletter" OnClick="btnAction_Click" />

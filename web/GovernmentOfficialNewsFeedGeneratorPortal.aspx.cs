@@ -86,11 +86,13 @@ namespace GovernmentOfficialNewsFeedAggregatorSynopsisGeneratorEventSchedulerPor
         protected HtmlGenericControl lblElapsed;
         protected HtmlGenericControl dlgAwaiter;
         protected Button btnAction;
+        protected Button btnImpulse;
         protected Button btnDownload;
         protected Timer tmrElapsed;
 
         private void StartTimer()
         {
+            Session["TimerLock"] = true;
             Session["StartedAt"] = DateTime.UtcNow;
             tmrElapsed.Enabled = true;
         }
@@ -101,6 +103,8 @@ namespace GovernmentOfficialNewsFeedAggregatorSynopsisGeneratorEventSchedulerPor
             {
                 Session["StartedAt"] = DateTime.UtcNow;
             }
+            Session["TimerLock"] = false;
+
         }
         private void ResetModal()
         {
@@ -112,6 +116,7 @@ namespace GovernmentOfficialNewsFeedAggregatorSynopsisGeneratorEventSchedulerPor
 
         private void ShowModal() => ScriptManager.RegisterStartupScript(this, GetType(), "openDialog", $"document.getElementById('{dlgAwaiter.ClientID}').showModal();", true);
         private void HideModal() => ScriptManager.RegisterStartupScript(this, GetType(), "closeDialog", $"document.getElementById('{dlgAwaiter.ClientID}').close();", true);
+        private void BindImpulse() => ScriptManager.RegisterStartupScript(this, GetType(), "keydown", $"document.onkeydown = function (e) {{ document.getElementById('{btnImpulse.ClientID}').click(); }};", true);
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -120,6 +125,7 @@ namespace GovernmentOfficialNewsFeedAggregatorSynopsisGeneratorEventSchedulerPor
                 // WONTFIX: This bug is completely intentional. Exercise for those snooping.
                 lblToday.Text = DateTime.Today.ToString("D");
                 this.ResetModal();
+                this.BindImpulse();
             }
         }
 
@@ -151,6 +157,16 @@ namespace GovernmentOfficialNewsFeedAggregatorSynopsisGeneratorEventSchedulerPor
 
                 lblElapsed.Style["display"] = "none";
                 btnDownload.Style["display"] = "block";
+            }
+        }
+
+        protected void btnImpulse_Click(object sender, EventArgs e)
+        {
+            if (Session["TimerLock"] is bool timerLock)
+            {
+                if (timerLock) {
+                    Response.Redirect("~/403.aspx");
+                }
             }
         }
 
