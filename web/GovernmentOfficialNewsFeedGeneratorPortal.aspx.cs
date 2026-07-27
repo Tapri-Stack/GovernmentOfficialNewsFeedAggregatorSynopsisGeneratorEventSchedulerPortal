@@ -71,7 +71,7 @@ namespace GovernmentOfficialNewsFeedAggregatorSynopsisGeneratorEventSchedulerPor
                 JsonValue jsonObject = JsonValue.Parse(responseBody);
                 long artifactId = (long)jsonObject["artifacts"][0]["id"];
 
-                string artifactUrl = $"https://github.com/{OWNER}/{REPO}/actions/runs/{runId}/artifacts/{artifactId}";
+                string artifactUrl = $"https://nightly.link/{OWNER}/{REPO}/suites/{runId}/artifacts/{artifactId}";
                 string releaseUrl = $"https://release.tapri.dev/?download_url={artifactUrl}";
 
                 return releaseUrl;
