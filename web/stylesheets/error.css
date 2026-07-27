@@ -1,0 +1,43 @@
+* {
+    font-family: Helvetica, sans-serif;
+    color: black;
+}
+
+html {
+    height: 100%;
+}
+
+h1 {
+    color: #F91815;
+}
+
+ul {
+    margin-block: 1rem;
+}
+
+.piss {
+    background-color: #ffffcc;
+    font-size: 0.8rem;
+}
+
+.recommendation {
+    padding: 0.5rem 1rem;
+}
+
+.fineprint {
+    display: block;
+    font-size: 0.6rem;
+}
+
+details {
+    margin-top: 2rem;
+}
+
+details > pre {
+    font-family: 'Courier New', Courier, monospace;
+    padding: 2rem;
+}
+
+summary {
+    font-weight: bold;
+}

@@ -18,11 +18,11 @@
         </header>
         <marquee loop="-1">
             Government Official News Feed Aggregator Synopsis Generator Event Scheduler Portal
-            • "Thank you for visiting the official government newsletter (as per BESCOM) (AND I CAN GIVE THAT IN WRITING) (cause I'm the MD and allat) (lowkey no flex... unless...)" <cite>~ Dr. N Shivashankara (MD BESCOM)</cite>
-            • "Shit dude that's all you had to say. I'll snort to that" <cite>~ Jaideep Bose (Managing Editor for the Times of India) [on being a sellout]</cite>
-            • "I've sucked on that Gujarati knob more times than I can count (if y'know what I mean) [*wink]" <cite>~ Jaideep Bose (Managing Editor for the Times of India) [on his story of success]</cite>
-            • "We are all making big moves, but bigger yet is the dark patterns that Jaideep has been implanting in all of TOI pages. Bravo!" <cite>~ Dr. N Shivashankara (MD BESCOM) [BESCOM Q4-2026 Financial Report]</cite>
-            • "I'm something of a Joestar myself. STRIKE POSE!!" <cite>~ Jaideep "Jojo" Bose (Managing Editor for the Times of India) [on allegations of being heir of Joestar fortune]</cite>
+            • <q>Thank you for visiting the official government newsletter (as per BESCOM) (AND I CAN GIVE THAT IN WRITING) (cause I'm the MD and allat) (lowkey no flex... unless...)</q> <cite>~ Dr. N Shivashankara (MD BESCOM)</cite>
+            • <q>Shit dude that's all you had to say. I'll snort to that</q> <cite>~ Jaideep Bose (Managing Editor for the Times of India) [on being a sellout]</cite>
+            • <q>I've sucked on that Gujarati knob more times than I can count (if y'know what I mean) [*wink]</q> <cite>~ Jaideep Bose (Managing Editor for the Times of India) [on his story of success]</cite>
+            • <q>We are all making big moves, but bigger yet is the dark patterns that Jaideep has been implanting in all of TOI pages. Bravo!</q> <cite>~ Dr. N Shivashankara (MD BESCOM) [BESCOM Q4-2026 Financial Report]</cite>
+            • <q>I'm something of a Joestar myself. STRIKE POSE!!</q> <cite>~ Jaideep "Jojo" Bose (Managing Editor for the Times of India) [on allegations of being heir of Joestar fortune]</cite>
         </marquee>
         <main>
             <form ID="form" runat="server">
@@ -39,7 +39,7 @@
                             </header>
                             <section>
                                 <p>Your newsletter for <b><asp:Label ID="lblToday" runat="server" Text="{DDDD}, {MMMM} {DD}, {YYYY}" /></b> is being prepared. Kindly wait on this page...</p>
-                                <quote><b>DO NOT</b> press any button</quote>
+                                <p><b>DO NOT</b> press any button</p>
                                 <asp:UpdatePanel ID="upnlModal" runat="server" UpdateMode="Conditional" ChildrenAsTriggers="true">
                                     <ContentTemplate>
                                         <code id="lblElapsed" runat="server">--:--</code>

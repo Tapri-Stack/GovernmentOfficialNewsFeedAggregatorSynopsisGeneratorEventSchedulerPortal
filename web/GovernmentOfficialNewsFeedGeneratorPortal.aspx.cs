@@ -127,7 +127,7 @@ namespace GovernmentOfficialNewsFeedAggregatorSynopsisGeneratorEventSchedulerPor
         {
             if (!(Session["StartedAt"] is DateTime startedAt))
             {
-                // TODO: Redirect to 403 Forbidden or 500 Internal Server Error page
+                Response.Redirect("~/403.aspx");
                 this.StopTimer(true);
                 return;
             }
@@ -140,7 +140,14 @@ namespace GovernmentOfficialNewsFeedAggregatorSynopsisGeneratorEventSchedulerPor
             {
                 this.StopTimer(false);
 
-                Session["ReleaseLink"] = GovernmentOfficialNewsFeedGeneratorEventScheduler.GetNewsFeedLink((long)Session["WorkflowRunId"]);
+                try
+                {
+                    Session["ReleaseLink"] = GovernmentOfficialNewsFeedGeneratorEventScheduler.GetNewsFeedLink((long)Session["WorkflowRunId"]);
+                }
+                catch (Exception)
+                {
+                    Response.Redirect("~/500.aspx");
+                }
 
                 lblElapsed.Style["display"] = "none";
                 btnDownload.Style["display"] = "block";
@@ -151,7 +158,15 @@ namespace GovernmentOfficialNewsFeedAggregatorSynopsisGeneratorEventSchedulerPor
         {
             this.StartTimer();
 
-            Session["WorkflowRunId"] = GovernmentOfficialNewsFeedGeneratorEventScheduler.ScheduleNewsFeedGeneration();
+            try
+            {
+                Session["WorkflowRunId"] = GovernmentOfficialNewsFeedGeneratorEventScheduler.ScheduleNewsFeedGeneration();
+            }
+            catch (Exception)
+            {
+                Response.Redirect("~/500.aspx");
+            }
+
             this.ShowModal();
         }
 
