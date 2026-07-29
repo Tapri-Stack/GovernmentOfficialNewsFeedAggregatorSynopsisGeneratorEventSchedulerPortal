@@ -67,7 +67,7 @@ jobs:
 
   respin:
     needs: serve
-    if: failure() && needs.primary-job.result == 'failure'
+    if: always()
 
     runs-on: ubuntu-latest
 
